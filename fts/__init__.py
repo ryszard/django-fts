@@ -41,5 +41,5 @@ def get_fts(backend_uri):
         module = __import__(scheme, {}, {}, [''])
     return getattr(module, 'SearchClass')(host, params), getattr(module, 'SearchableModel'), getattr(module, 'SearchManager')
 
-_fts, SearchableModel, SearchManager = get_fts(settings.FTS_BACKEND)
+_fts, SearchableModel, SearchManager = get_fts(FTS_BACKEND)
 backend = _fts.backend
