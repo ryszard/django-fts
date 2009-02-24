@@ -20,7 +20,9 @@ class BaseManager(models.Manager):
     def __init__(self, **kwargs):
         super(BaseManager, self).__init__()
         self.fields = kwargs.get('fields')
-        self.default_weight = kwargs.get('default_weight', '')
+        self.default_weight = kwargs.get('default_weight')
+        if self.default_weight not in ['A', 'B', 'C', 'D']:
+            self.default_weight = 'A'
         self.language_code = kwargs.get('language_code')
         if not self.language_code:
             from django.utils import translation

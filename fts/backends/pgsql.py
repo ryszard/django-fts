@@ -46,7 +46,6 @@ class SearchClass(BaseClass):
 
 class SearchManager(BaseManager):
     def __init__(self, **kwargs):
-        kwargs.setdefault('default_weight', 'A')
         super(SearchManager, self).__init__(**kwargs)
         self.language = LANGUAGES[self.language_code]
         self._vector_field_cache = None

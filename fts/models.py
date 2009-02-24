@@ -15,6 +15,7 @@ if FTS_BACKEND.startswith('simple://'):
     
     class Index(models.Model):
         word = models.ForeignKey(IndexWord)
+        weight = models.IntegerField()
         
         content_type = models.ForeignKey(ContentType)
         object_id = models.PositiveIntegerField()

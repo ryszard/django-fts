@@ -16,6 +16,13 @@ try:
 except ImportError:
     from fts.words.porter import Stemmer
     
+WEIGHTS = {
+    'A' : 10,
+    'B' : 4,
+    'C' : 2,
+    'D' : 1
+}
+
 class SearchClass(BaseClass):
     def __init__(self, server, params):
         self.backend = 'simple'
@@ -46,7 +53,7 @@ class SearchManager(BaseManager):
                         except KeyError:
                             iw = IndexWord.objects.get_or_create(word=w)[0]
                             IW[w] = iw
-                        i = Index(content_object=item, word=iw)
+                        i = Index(content_object=item, word=iw, weight=WEIGHTS[weight])
                         i.save()
 
     def search(self, query, **kwargs):

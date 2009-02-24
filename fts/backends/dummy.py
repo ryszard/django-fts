@@ -25,7 +25,7 @@ class SearchManager(BaseManager):
                 p = Stemmer(self.language_code)
                 w = p(w)
                 for field in self._fields.keys():
-                    params |= Q(**{'%s__icontains' % field: w})
+                    params &= Q(**{'%s__icontains' % field: w})
         return self.filter(params)
 
 class SearchableModel(BaseModel):
