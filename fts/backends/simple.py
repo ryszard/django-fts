@@ -25,7 +25,7 @@ class SearchManager(BaseManager):
     def update_index(self, pk=None):
         if pk is not None:
             if isinstance(pk, (list,tuple)):
-                items = self.filter(pk_in=pk)
+                items = self.filter(pk__in=pk)
             else:
                 items = self.filter(pk=pk)
             items[0]._index.all().delete()

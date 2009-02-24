@@ -1,22 +1,28 @@
-==========
-django-fts
-==========
+=This is a generic Full Text Search engine for Django projects.=
 
-This is a generic Full Text Search engine for Django projects.
+Currently implements three backends: dummy, simple and pgsql.
 
-Example:
+  * *dummy* - just uses ILIKE to do the search (no indexes)
+  * *simple* - implements the search using two helper tables for the indexes
+  * *pgsql* - uses PostgreSQL 8.3 full text search engine
 
-settings.py
------------
+It should be possible to easily integrate MySQL, Sphinx and Xapian backends too.
+
+--------------------------------------------------------------------------------
+
+==Example:==
+
+===In your settings.py===
+{{{
 INSTALLED_APPS = (
-    ...
+    #...
     'fts'
 )
 FTS_BACKEND = 'simple://' # or 'dummy://' or 'pgsql://'
+}}}
 
-
-model.py
---------
+===In your models.py===
+{{{
 from django.db import models
 import fts
 
@@ -40,10 +46,12 @@ class Blog(fts.SearchableModel):
 
     def __unicode__(self):
         return u"%s" % (self.title)
+}}}
 
 
-python ./manage.py shell
-------------------------
+===Testing in the django shell===
+{{{
+# python ./manage.py shell
 # Create some test data. By default, the index field is automatically updated when save() is called.
 
 from blog.models import Blog
@@ -61,12 +69,17 @@ Blog.objects.search('bodies').all()
 # You can force an index update to all or some instances:
 Blog.objects.update_index()
 Blog.objects.update_index( pk=1 )
+Blog.objects.update_index( pk=[1, 2] )
 
 #You can omit the search function and make the search directly over object
 Blog.objects('simple')
+}}}
 
-# If using the pgsql backend, don't forget to add a Gin or GiST index to your tables:
-# http://www.postgresql.org/docs/8.3/static/textsearch-indexes.html
-# CREATE INDEX tablename_search_index ON tablename USING gin(search_index);
-#   or
-# CREATE INDEX tablename_search_index ON tablename USING gist(search_index);
+==PostgreSQL specific information==
+The PostgreSQL backend is heavily based in the code from http://www.djangosnippets.org/snippets/1328/ by Dan Watson.
+
+If using the pgsql backend, don't forget to add a Gin or GiST index to your tables:
+http://www.postgresql.org/docs/8.3/static/textsearch-indexes.html
+
+===Example:===
+{{{CREATE INDEX tablename_search_index ON tablename USING gin(search_index);}}}
