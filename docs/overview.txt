@@ -57,8 +57,8 @@ class Blog(fts.SearchableModel):
     title = models.CharField(max_length=100)
     body = models.TextField()
 
-    # Defining a SearchManager without fields will use all CharFields and TextFields
-    # this is the default and you do not need to explicitly add the following line:
+    # Defining a SearchManager without fields will use all CharFields and TextFields.
+    # This is the default and you do not need to explicitly add the following line:
     # objects = fts.SearchManager()
 
     # You can pass a list of fields that should be indexed
@@ -94,6 +94,8 @@ Now perform a search:
 >>> result = Blog.objects.search('simple').all()
 >>> result.count()
 1
+>>> result
+[<Blog: This is the third title>]
 }}}
 
 == Additional information ==
@@ -111,7 +113,6 @@ You can omit the search function and make the search directly:
 >>> result = Blog.objects('simple')
 >>> result.count()
 1
-1
 >>> result
 [<Blog: This is the third title>]
 }}}
@@ -123,4 +124,7 @@ If using the pgsql backend, don't forget to add a Gin or GiST index to your tabl
 http://www.postgresql.org/docs/8.3/static/textsearch-indexes.html
 
 == Example ==
-`CREATE INDEX tablename_search_index ON tablename USING gin(search_index);`
+{{{
+CREATE INDEX "tablename_search_index" ON "tablename" USING gin("search_index");
+}}}
+*Note:* You should index the `search_index` column, not your text or char columns.

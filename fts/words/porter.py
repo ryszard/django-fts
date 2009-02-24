@@ -111,7 +111,8 @@ class Stemmer(object):
            cav(e), lov(e), hop(e), crim(e), but
            snow, box, tray.
         """
-        if i < (self.k0 + 2) or not self.cons(i) or self.cons(i-1) or not self.cons(i-2):
+        if i == 1: return (not self.cons(0) and self.cons(1))
+        if i == 0 or not self.cons(i) or self.cons(i-1) or not self.cons(i-2):
             return 0
         ch = self.b[i]
         if ch == 'w' or ch == 'x' or ch == 'y':
@@ -146,7 +147,8 @@ class Stemmer(object):
 
            caresses  ->  caress
            ponies    ->  poni
-           ties      ->  ti
+           tie       ->  tie
+           sties     ->  sti
            caress    ->  caress
            cats      ->  cat
 
@@ -166,10 +168,19 @@ class Stemmer(object):
             if self.ends("sses"):
                 self.k = self.k - 2
             elif self.ends("ies"):
-                self.setto("i")
+                if self.j == 0:
+                    self.k = self.k - 1
+                else:
+                    self.k = self.k - 2
             elif self.b[self.k - 1] != 's':
                 self.k = self.k - 1
-        if self.ends("eed"):
+
+        if self.ends("ied"):
+            if self.j == 0:
+                self.k = self.k - 1
+            else:
+                self.k = self.k - 2
+        elif self.ends("eed"):
             if self.m() > 0:
                 self.k = self.k - 1
         elif (self.ends("ed") or self.ends("ing")) and self.vowelinstem():
@@ -187,7 +198,7 @@ class Stemmer(object):
 
     def step1c(self):
         """step1c() turns terminal y to i when there is another vowel in the stem."""
-        if (self.ends("y") and self.vowelinstem()):
+        if self.ends("y") and self.j > 0 and self.cons(self.k - 1):
             self.b = self.b[:self.k] + 'i' + self.b[self.k+1:]
 
     def step2(self):
@@ -207,7 +218,11 @@ class Stemmer(object):
             if self.ends("bli"):       self.r("ble") # --DEPARTURE--
             # To match the published algorithm, replace this phrase with
             #   if self.ends("abli"):      self.r("able")
-            elif self.ends("alli"):    self.r("al")
+            elif self.ends("alli"):
+                if self.m() > 0:
+                    self.setto("al")
+                    self.step2()
+            elif self.ends("fulli"):   self.r("ful")
             elif self.ends("entli"):   self.r("ent")
             elif self.ends("eli"):     self.r("e")
             elif self.ends("ousli"):   self.r("ous")
@@ -225,7 +240,9 @@ class Stemmer(object):
             elif self.ends("iviti"):   self.r("ive")
             elif self.ends("biliti"):  self.r("ble")
         elif self.b[self.k - 1] == 'g': # --DEPARTURE--
-            if self.ends("logi"):      self.r("log")
+            if self.ends("logi"):
+                self.j = self.j + 1
+                self.r("og")
         # To match the published algorithm, delete this phrase
 
     def step3(self):
@@ -338,4 +355,4 @@ class Stemmer(object):
         word = word.lower()
         if not self.language:
             return word
-        return self.stem(word, 0, len(word))
+        return self.stem(word, 0, len(word)-1)
