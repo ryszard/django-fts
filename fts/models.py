@@ -4,9 +4,9 @@ Full Text Search Framework
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.conf import settings
+from fts.settings import *
 
-if settings.FTS_BACKEND.startswith('simple://'):
+if FTS_BACKEND.startswith('simple://'):
     class IndexWord(models.Model):
         word = models.CharField(unique=True, db_index=True, blank=False, max_length=100)
         
@@ -22,5 +22,3 @@ if settings.FTS_BACKEND.startswith('simple://'):
         
         def __unicode__(self):
             return u'%s [%s]' % (self.content_object, self.word.word)
-
-

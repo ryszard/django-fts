@@ -1,9 +1,10 @@
 __all__ = ('backend', 'SearchableModel', 'SearchableManager')
 
 from cgi import parse_qsl
-from django.conf import settings
 from django.core import signals
 from fts.backends.base import InvalidFtsBackendError
+
+from fts.settings import *
 
 # Name for use in settings file --> name of module in "backends" directory.
 # Any backend scheme that is not in this dictionary is treated as a Python
