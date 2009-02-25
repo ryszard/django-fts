@@ -58,12 +58,24 @@ class SearchManager(BaseManager):
 
     def search(self, query, **kwargs):
         params = Q()
+        
+        #SELECT core_blog.*, count(DISTINCT word_id), sum(weight)
+        #FROM core_blog INNER JOIN fts_index ON (core_blog.id = fts_index.object_id) INNER JOIN fts_indexword ON (fts_index.word_id = fts_indexword.id)
+        #WHERE fts_index.content_type_id = 18  AND (fts_indexword.word='titl' OR fts_indexword.word='simpl')
+        #GROUP BY core_blog.id, core_blog.title, core_blog.body
+        #HAVING count(DISTINCT word_id) = 2;
+        words = 0
         for w in set(query.lower().split(' ')):
             if w and w not in FTS_STOPWORDS[self.language_code]:
+                words += 1
                 p = Stemmer(self.language_code)
                 w = p(w)
                 params |= Q(_index__word__word=w)
-        return self.filter(params).distinct()
+        qs = self.filter(params)
+        #if words > 1:
+        #    qs.query.group_by = ['core_blog.id, core_blog.title, core_blog.body']
+        #    qs.query.having = ['(COUNT(DISTINCT fts_index.word_id)) = %d' % words]
+        return qs.distinct()
 
 class SearchableModel(BaseModel):
     class Meta:
