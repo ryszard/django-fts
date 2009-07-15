@@ -320,3 +320,18 @@ except NameError:
                               kim mı mu mü nasıl ne neden nerde nerede nereye
                               niçin niye o sanki şey siz şu tüm ve veya ya
                               yani""".split())
+    FTS_STOPWORDS['pl'] = set("""a aby ale bardziej bardzo bez bo
+                              bowiem był była było były będzie co czy
+                              czyli dla dlatego do gdy gdzie go i ich
+                              im innych iż jak jako jednak jego jej
+                              jest jeszcze jeśli już kiedy kilka która
+                              które którego której który których
+                              którym którzy lub ma mi między mnie mogą
+                              może można na nad nam nas naszego
+                              naszych nawet nich nie nim niż o od oraz
+                              po pod poza przed przede przez przy
+                              również się sobie swoje są ta tak takie
+                              także tam te tego tej ten też to tu tych
+                              tylko tym u w we wiele wielu więc
+                              wszystkich wszystkim wszystko właśnie z
+                              za zawsze ze że""".split())
