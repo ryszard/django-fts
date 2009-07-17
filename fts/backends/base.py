@@ -27,9 +27,6 @@ class BaseManager(models.Manager):
         if not self.language_code:
             from django.utils import translation
             self.language_code = translation.get_language().split('-',1)[0].lower()
-        
-    def __call__(self, query, **kwargs):
-        return self.search(query, **kwargs)
 
     def contribute_to_class(self, cls, name):
         # Instances need to get to us to update their indexes.
