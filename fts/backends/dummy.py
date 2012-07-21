@@ -24,8 +24,10 @@ class SearchManager(BaseManager):
             if w and w not in FTS_STOPWORDS[self.language_code]:
                 p = Stemmer(self.language_code)
                 w = p(w)
+                word_params = Q()
                 for field in self._fields.keys():
-                    params &= Q(**{'%s__icontains' % field: w})
+                    word_params |= Q(**{'%s__icontains' % field: w})
+                params &= word_params
         return self.filter(params)
 
 class SearchableModel(BaseModel):
