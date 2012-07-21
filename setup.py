@@ -4,6 +4,7 @@ Based entirely on Django's own ``setup.py``.
 import os
 from distutils.command.install import INSTALL_SCHEMES
 from distutils.core import setup
+import setuptools
 
 def fullsplit(path, result=None):
     """
